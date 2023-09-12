@@ -50,6 +50,13 @@ class TkDrawer:
     def draw_line(self, p, q):
         self.canvas.create_line(x(p), y(p), x(q), y(q), fill="black", width=2)
         self.root.update()
+    
+    def draw_circle(self, r):
+        # r = R2Point(r, r)
+        p1 = R2Point(-r, -r)
+        p2 = R2Point(r, r)
+        self.canvas.create_oval(x(p1), y(p1), x(p2), y(p2), outline='red')
+        self.root.update()
 
 
 if __name__ == "__main__":
@@ -61,4 +68,5 @@ if __name__ == "__main__":
     tk.draw_point(R2Point(2.0, 2.0))
     tk.draw_line(R2Point(0.0, 0.0), R2Point(1.0, 1.0))
     tk.draw_line(R2Point(0.0, 0.0), R2Point(1.0, 0.0))
-    time.sleep(5)
+    tk.draw_circle(1)
+    time.sleep(3)
