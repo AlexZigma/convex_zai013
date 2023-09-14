@@ -67,7 +67,7 @@ class Polygon(Figure):
             a, c = c, a
         self._perimeter = a.dist(b) + b.dist(c) + c.dist(a)
         self._area = abs(R2Point.area(a, b, c))
-        self._area_cross = R2Point.area_tr_cr(a, b, c, 1)
+        self._area_cross = R2Point.area_tr_ring(a, b, c)
 
     def perimeter(self):
         return self._perimeter
@@ -95,12 +95,16 @@ class Polygon(Figure):
             self._area += abs(R2Point.area(t,
                                            self.points.last(),
                                            self.points.first()))
+            self._area_cross += R2Point.area_tr_ring(t, self.points.last(), self.points.first())
+            print(f'1 {self._area_cross}')
 
             # удаление освещённых рёбер из начала дека
             p = self.points.pop_first()
             while t.is_light(p, self.points.first()):
                 self._perimeter -= p.dist(self.points.first())
                 self._area += abs(R2Point.area(t, p, self.points.first()))
+                self._area_cross += R2Point.area_tr_ring(t, p, self.points.first())
+                print(f'2 {self._area_cross}')
                 p = self.points.pop_first()
             self.points.push_first(p)
 
@@ -109,6 +113,8 @@ class Polygon(Figure):
             while t.is_light(self.points.last(), p):
                 self._perimeter -= p.dist(self.points.last())
                 self._area += abs(R2Point.area(t, p, self.points.last()))
+                self._area_cross += R2Point.area_tr_ring(t, p, self.points.last())
+                print(f'3 {self._area_cross}')
                 p = self.points.pop_last()
             self.points.push_last(p)
 

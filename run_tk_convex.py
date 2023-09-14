@@ -32,12 +32,14 @@ tk = TkDrawer()
 f = Void()
 tk.clean()
 tk.draw_circle(1)
+tk.draw_circle(2)
 
 try:
     while True:
         f = f.add(R2Point())
         tk.clean()
         tk.draw_circle(1)
+        tk.draw_circle(2)
         f.draw(tk)
         print(f"S = {f.area()}, P = {f.perimeter()}, AC = {f.area_cross()}\n")
 except(EOFError, KeyboardInterrupt):

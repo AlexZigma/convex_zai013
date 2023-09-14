@@ -56,8 +56,7 @@ class R2Point:
     
     @staticmethod
     def area_sector(p1: 'R2Point', p2: 'R2Point', r: float) -> float:
-        # print(p1, p2)
-        a = abs(p1.x*p2.x+p1.y*p2.y) / (p1.dist(R2Point(0, 0)) * p2.dist(R2Point(0, 0)))
+        a = (p1.x*p2.x+p1.y*p2.y) / (p1.dist(R2Point(0, 0)) * p2.dist(R2Point(0, 0)))
         alpha = acos(round(a, 8)) 
         return (alpha*r**2)/2 * (-1 if R2Point(0, 0).is_light(p1, p2) else 1)
 
@@ -88,7 +87,13 @@ class R2Point:
     
     def area_tr_cr(p1, p2, p3, r):
         area = R2Point.area_edge(p1, p2, r) + R2Point.area_edge(p2, p3, r) + R2Point.area_edge(p3, p1, r)
-        return round(area, 2)
+        return area
+    
+    def area_tr_ring(p1, p2, p3):
+        if not p2.is_light(p1, p3):
+            p1, p3 = p3, p1
+        area = R2Point.area_tr_cr(p1, p2, p3, 2) - R2Point.area_tr_cr(p1, p2, p3, 1)
+        return area
 
 
 if __name__ == "__main__":
@@ -97,10 +102,15 @@ if __name__ == "__main__":
     # print(x.dist(R2Point(1.0, 0.0)))
     # a, b, c = R2Point(0.0, 0.0), R2Point(1.0, 0.0), R2Point(1.0, 1.0)
     # print(R2Point.area(a, c, b))
-    p1 = R2Point(1, 0)
-    p2 = R2Point(0, 1)
-    p3 = R2Point(0, 0)
+    p1 = R2Point(4, 4)
+    p2 = R2Point(-3, 1)
+    p3 = R2Point(3, 3)
     r = 1
     
-    print(R2Point.area_tr_cr(p1, p2, p3, r))
+    # print(R2Point.area_tr_cr(p1, p2, p3, r))
+    print(R2Point.area_tr_ring(p1, p3, p2))
+    # print(acos(-.2))
+    # print(R2Point.area_edge(p1, p2, 2))
+    # print(R2Point.area_sector(R2Point(0, 2), p3, 2))
+    # print(R2Point.area_tr_ring(p1, p2, p3))
     # [print(x) for x in R2Point.cross_cyrcle(p2, p1, r)]
