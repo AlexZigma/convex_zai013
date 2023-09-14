@@ -1,5 +1,5 @@
-from math import sqrt
-
+from math import sqrt, acos
+from sympy import solve, symbols
 
 class R2Point:
     """ Точка (Point) на плоскости (R2) """
@@ -39,15 +39,68 @@ class R2Point:
         return s < 0.0 or (s == 0.0 and not self.is_inside(a, b))
 
     # Совпадает ли точка с другой?
-    def __eq__(self, other):
+    def __eq__(self, other: 'R2Point'):
         if isinstance(other, type(self)):
             return self.x == other.x and self.y == other.y
         return False
+    
+    def __str__(self):
+        return(f'({self.x}, {self.y})')
+    
+    def isin(self, r):
+        return self.dist(R2Point(0, 0)) <= r
+    
+    @staticmethod
+    def dist_to_line(p1: 'R2Point', p2: 'R2Point') -> float:
+        return 2*abs(R2Point.area(R2Point(0, 0), p1, p2)/p1.dist(p2))
+    
+    @staticmethod
+    def area_sector(p1: 'R2Point', p2: 'R2Point', r: float) -> float:
+        # print(p1, p2)
+        a = abs(p1.x*p2.x+p1.y*p2.y) / (p1.dist(R2Point(0, 0)) * p2.dist(R2Point(0, 0)))
+        alpha = acos(round(a, 8)) 
+        return (alpha*r**2)/2 * (-1 if R2Point(0, 0).is_light(p1, p2) else 1)
+
+    @staticmethod
+    def cross_cyrcle(a: 'R2Point', b: 'R2Point', r: float) -> list:
+        x, y = symbols('x, y', real=True)
+        x1, y1, x2, y2 = a.x, a.y, b.x, b.y
+        sol = solve([(x-x1)*(y2-y1)-(x2-x1)*(y-y1), x**2+y**2-r**2], x, y)
+        lst = []
+        for s in sol:
+            p1, p2 = s[0], s[1]
+            if (x1<=p1<=x2 or x2<=p1<=x1) and (y1<=p2<=y2 or y2<=p2<=y1):
+                lst.append((p1, p2))
+
+        lst = [R2Point(float(p[0]), float(p[1])) for p in lst]
+        lst = sorted(lst, key=lambda x: (x.x, x.y)) 
+        if a.x > b.x or a.x == b.x and a.y > b.y:
+            lst = lst[::-1]
+        return [a] + lst + [b]
+    
+    def area_edge(p1: 'R2Point', p2: 'R2Point', r: float):
+        points = R2Point.cross_cyrcle(p1, p2, r)
+        area = 0
+        for i in range(len(points)-1):
+            if points[i].isin(r) and points[i+1].isin(r): area += R2Point.area(points[i], points[i+1], R2Point(0, 0))
+            else: area += R2Point.area_sector(points[i], points[i+1], r)
+        return area
+    
+    def area_tr_cr(p1, p2, p3, r):
+        area = R2Point.area_edge(p1, p2, r) + R2Point.area_edge(p2, p3, r) + R2Point.area_edge(p3, p1, r)
+        return round(area, 2)
 
 
 if __name__ == "__main__":
-    x = R2Point(1.0, 1.0)
-    print(type(x), x.__dict__)
-    print(x.dist(R2Point(1.0, 0.0)))
-    a, b, c = R2Point(0.0, 0.0), R2Point(1.0, 0.0), R2Point(1.0, 1.0)
-    print(R2Point.area(a, c, b))
+    # x = R2Point(1.0, 1.0)
+    # print(type(x), x.__dict__)
+    # print(x.dist(R2Point(1.0, 0.0)))
+    # a, b, c = R2Point(0.0, 0.0), R2Point(1.0, 0.0), R2Point(1.0, 1.0)
+    # print(R2Point.area(a, c, b))
+    p1 = R2Point(1, 0)
+    p2 = R2Point(0, 1)
+    p3 = R2Point(0, 0)
+    r = 1
+    
+    print(R2Point.area_tr_cr(p1, p2, p3, r))
+    # [print(x) for x in R2Point.cross_cyrcle(p2, p1, r)]

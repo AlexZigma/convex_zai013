@@ -10,6 +10,9 @@ class Figure:
 
     def area(self):
         return 0.0
+    
+    def area_cross(self):
+        return 0.0
 
 
 class Void(Figure):
@@ -61,14 +64,19 @@ class Polygon(Figure):
         else:
             self.points.push_last(a)
             self.points.push_first(c)
+            a, c = c, a
         self._perimeter = a.dist(b) + b.dist(c) + c.dist(a)
         self._area = abs(R2Point.area(a, b, c))
+        self._area_cross = R2Point.area_tr_cr(a, b, c, 1)
 
     def perimeter(self):
         return self._perimeter
 
     def area(self):
         return self._area
+    
+    def area_cross(self):
+        return self._area_cross
 
     # добавление новой точки
     def add(self, t):

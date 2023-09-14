@@ -31,13 +31,15 @@ setattr(Polygon, 'draw', polygon_draw)
 tk = TkDrawer()
 f = Void()
 tk.clean()
+tk.draw_circle(1)
 
 try:
     while True:
         f = f.add(R2Point())
         tk.clean()
+        tk.draw_circle(1)
         f.draw(tk)
-        print(f"S = {f.area()}, P = {f.perimeter()}\n")
+        print(f"S = {f.area()}, P = {f.perimeter()}, AC = {f.area_cross()}\n")
 except(EOFError, KeyboardInterrupt):
     print("\nStop")
     tk.close()

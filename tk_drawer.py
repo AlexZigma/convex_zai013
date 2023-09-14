@@ -1,4 +1,5 @@
 from tkinter import *
+from r2point import R2Point
 
 # Размер окна
 SIZE = 600
