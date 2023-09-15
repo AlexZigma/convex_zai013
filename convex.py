@@ -10,7 +10,7 @@ class Figure:
 
     def area(self):
         return 0.0
-    
+
     def area_cross(self):
         return 0.0
 
@@ -74,7 +74,7 @@ class Polygon(Figure):
 
     def area(self):
         return self._area
-    
+
     def area_cross(self):
         return self._area_cross
 
@@ -95,7 +95,8 @@ class Polygon(Figure):
             self._area += abs(R2Point.area(t,
                                            self.points.last(),
                                            self.points.first()))
-            self._area_cross += R2Point.area_tr_ring(t, self.points.last(), self.points.first())
+            self._area_cross += R2Point.area_tr_ring(t, self.points.last(),
+                                                     self.points.first())
             print(f'1 {self._area_cross}')
 
             # удаление освещённых рёбер из начала дека
@@ -103,7 +104,8 @@ class Polygon(Figure):
             while t.is_light(p, self.points.first()):
                 self._perimeter -= p.dist(self.points.first())
                 self._area += abs(R2Point.area(t, p, self.points.first()))
-                self._area_cross += R2Point.area_tr_ring(t, p, self.points.first())
+                self._area_cross += R2Point.area_tr_ring(t, p,
+                                                         self.points.first())
                 print(f'2 {self._area_cross}')
                 p = self.points.pop_first()
             self.points.push_first(p)
@@ -113,7 +115,8 @@ class Polygon(Figure):
             while t.is_light(self.points.last(), p):
                 self._perimeter -= p.dist(self.points.last())
                 self._area += abs(R2Point.area(t, p, self.points.last()))
-                self._area_cross += R2Point.area_tr_ring(t, p, self.points.last())
+                self._area_cross += R2Point.area_tr_ring(t, p,
+                                                         self.points.last())
                 print(f'3 {self._area_cross}')
                 p = self.points.pop_last()
             self.points.push_last(p)

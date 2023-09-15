@@ -1,5 +1,5 @@
 from pytest import approx
-from math import sqrt
+from math import sqrt, pi
 from r2point import R2Point
 from convex import Figure, Void, Point, Segment, Polygon
 
@@ -29,6 +29,9 @@ class TestVoid:
     # При добавлении точки нульугольник превращается в одноугольник
     def test_add(self):
         assert isinstance(self.f.add(R2Point(0.0, 0.0)), Point)
+
+    def test_area_cross(self):
+        assert self.f.area_cross() == 0
 
 
 class TestPoint:
@@ -162,3 +165,20 @@ class TestPolygon:
 
     def test_area2(self):
         assert self.f.add(R2Point(1.0, 1.0)).area() == approx(1.0)
+
+    def test_area_cross_1(self):
+        f = Polygon(R2Point(0, 0), R2Point(3, 0), R2Point(0, 3))
+        assert f.area_cross() == approx(3*pi/4)
+
+    def test_area_cross_2(self):
+        f = Polygon(R2Point(0, 0), R2Point(3, 0), R2Point(0, 3))
+        f = f.add(R2Point(-3, 0))
+        assert f.area_cross() == approx(3*pi/2)
+
+    def test_area_cross_3(self):
+        f = Polygon(R2Point(0, 0), R2Point(3, 0), R2Point(0, 3))
+        f = f.add(R2Point(-3, 0)).add(R2Point(-3, -3)).add(R2Point(3, -3))
+        assert f.area_cross() == approx(3*pi)
+
+# python -B -m pytest -p no:cacheprovider --cov=.
+#   .\tests\test_convex.py --cov-report=html

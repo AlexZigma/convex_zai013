@@ -42,6 +42,6 @@ try:
         tk.draw_circle(2)
         f.draw(tk)
         print(f"S = {f.area()}, P = {f.perimeter()}, AC = {f.area_cross()}\n")
-except(EOFError, KeyboardInterrupt):
+except (EOFError, KeyboardInterrupt):
     print("\nStop")
     tk.close()
